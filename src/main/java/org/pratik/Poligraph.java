@@ -19,5 +19,24 @@ public class Poligraph {
       twitter.search()
     }
 
-    
+    public static void main(String[] args) throws TwitterException
+     {
+
+
+         ConfigurationBuilder cb = new ConfigurationBuilder();
+         cb.setDebugEnabled(true
+                 .setOAuthConsumerKey("consumer key")
+                 .setOAuthConsumerSecret("consumer secret")
+                 .setOAuthAccessToken("access token")
+                 .setOAuthAccessTokenSecret("access token secret")
+         TwitterFactory tf = new TwitterFactory(cb.build());
+         Twitter twitter = tf.getInstance();
+     Query query = new Query("#google");
+
+         QueryResult result = twitter.search(query);
+
+         for (Status status: result.getTweets())
+           System.out.println("Status@\t" + status.getUser().getScreenName() + "\t:\t" + status.getText());
+
+        }
 }
