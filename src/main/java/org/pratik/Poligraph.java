@@ -1,14 +1,11 @@
 package org.pratik;
 
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
+
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Poligraph {
 
@@ -40,6 +37,24 @@ public class Poligraph {
     public ArrayList<Status> twitterQuery(Query query) throws TwitterException {
         QueryResult result = twitter.search(query);
         return new ArrayList<>(result.getTweets());
+    }
+
+    public ArrayList<Status> getUserTweets(String user) throws TwitterException {
+        ResponseList<Status> result = twitter.getUserTimeline(user);
+        return new ArrayList<>(result);
+    }
+
+    public ArrayList<Status> getUserTweetsInRange(String user, Date startDate, Date endDate) throws TwitterException {
+        ArrayList<Status> allStatus = getUserTweets(user);
+        ArrayList<Status> statuses = new ArrayList<>();
+        Date createdAt;
+        for (Status status : allStatus) {
+            createdAt = status.getCreatedAt();
+            if (createdAt.after(startDate) && createdAt.before(endDate)) {
+                statuses.add(status);
+            }
+        }
+        return statuses;
     }
 
     public static void main(String[] args) throws TwitterException {
