@@ -31,6 +31,7 @@ public class Poligraph {
 
     // searchWord can be user id, place etc
     // date should be in the format yyyy-MM-dd
+    // returns all tweets within a certain date range which pertain to certain search words
     public ArrayList<Status> getTweetsInRange(String startDate, String endDate, String searchWord, int count) throws TwitterException {
         Query query = new Query(searchWord);
         query.setCount(count);
@@ -39,16 +40,19 @@ public class Poligraph {
         return twitterQuery(query);
     }
 
+    // finds tweets by specific search term
     public ArrayList<Status> twitterQuery(Query query) throws TwitterException {
         QueryResult result = twitter.search(query);
         return new ArrayList<>(result.getTweets());
     }
 
+    // returns all tweets by a user
     public ArrayList<Status> getUserTweets(String user) throws TwitterException {
         ResponseList<Status> result = twitter.getUserTimeline(user);
         return new ArrayList<>(result);
     }
 
+    // returns all user's tweets within a certain timeframe
     // startDate and endDate should be in the format "yyyy-MM-dd"
     public ArrayList<Status> getUserTweetsInRange(String user, String startDate, String endDate) throws TwitterException, ParseException {
         Date startDt =new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
@@ -65,6 +69,7 @@ public class Poligraph {
         return statuses;
     }
 
+    // finds all a user's tweets containing a certaint term
     public ArrayList<Status> getUserTweetsContainsWord(String user, String word) throws TwitterException {
         ArrayList<Status> statuses = new ArrayList<>();
         for (Status status : getUserTweets(user)) {
@@ -75,6 +80,7 @@ public class Poligraph {
         return statuses;
     }
 
+    // returns all of a certain user's tweets within a certain timeframe which contain a certain term
     public ArrayList<Status> getUserTweetsContainsStringInRange(String user, String word, String startDate, String endDate) throws TwitterException, ParseException {
         ArrayList<Status> statuses = new ArrayList<>();
         for (Status status : getUserTweetsInRange(user,startDate,endDate)) {
@@ -85,12 +91,14 @@ public class Poligraph {
         return statuses;
     }
 
+    // returns the "sentiment" of a tweet alongside the original tweet
     public Result analyzeSentiment(Status status) {
         TwitterSentimentAnalysis sentimentAnalysis = new TwitterSentimentAnalysis();
         int sentimentValue = sentimentAnalysis.analyzeTweet(status.getText());
         return new Result(status, sentimentValue);
     }
 
+    // returns the "sentiments" of several tweets 
     public ArrayList<Result> analyzeSentiment(ArrayList<Status> statuses) {
         ArrayList<Result> results = new ArrayList<>();
         for (Status status : statuses) {
