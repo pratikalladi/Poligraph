@@ -9,17 +9,31 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Poligraph {
-    Twitter twitter = TwitterFactory.getSingleton();
+    Twitter twitter;
+    public Poligraph(String cKey, String cKeySecret, String aToken, String aTokenSecret)
+    {
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(cKey)
+                .setOAuthConsumerSecret(cKeySecret)
+                .setOAuthAccessToken(aToken)
+                .setOAuthAccessTokenSecret(aTokenSecret);
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
+    }
 
 
     // searchWord can be user id, place etc
     // date should be in the format yyyy-MM-dd
-    public ArrayList<Status> getTweetsInRange(String startDate, String endDate, String searchWord) throws TwitterException {
+    public ArrayList<Status> getTweetsInRange(String startDate, String endDate, String searchWord, int count) throws TwitterException {
         Query query = new Query(searchWord);
+        query.setCount(count);
         query.setSince(startDate);
         query.setUntil(endDate);
         return twitterQuery(query);
@@ -35,12 +49,16 @@ public class Poligraph {
         return new ArrayList<>(result);
     }
 
-    public ArrayList<Status> getUserTweetsInRange(String user, Date startDate, Date endDate) throws TwitterException {
+    // startDate and endDate should be in the format "yyyy-MM-dd"
+    public ArrayList<Status> getUserTweetsInRange(String user, String startDate, String endDate) throws TwitterException, ParseException {
+        Date startDt =new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date endDt =new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+
         ArrayList<Status> statuses = new ArrayList<>();
         Date createdAt;
         for (Status status : getUserTweets(user)) {
             createdAt = status.getCreatedAt();
-            if (createdAt.after(startDate) && createdAt.before(endDate)) {
+            if (createdAt.after(startDt) && createdAt.before(endDt)) {
                 statuses.add(status);
             }
         }
@@ -57,7 +75,7 @@ public class Poligraph {
         return statuses;
     }
 
-    public ArrayList<Status> getUserTweetsContainsStringInRange(String user, String word, Date startDate, Date endDate) throws TwitterException {
+    public ArrayList<Status> getUserTweetsContainsStringInRange(String user, String word, String startDate, String endDate) throws TwitterException, ParseException {
         ArrayList<Status> statuses = new ArrayList<>();
         for (Status status : getUserTweetsInRange(user,startDate,endDate)) {
             if (status.getText().contains(word)) {
@@ -82,23 +100,20 @@ public class Poligraph {
         return results;
     }
 
-    public static void main(String[] args) throws TwitterException {
+    public static void main(String[] args) throws TwitterException, ParseException {
 
+        String cKey = "FZR30B3lQbMVoNEZBspeoJKPH";
+        String cKeySecret = "So12YRUjpr9qM9wfR921toN1yAmdvlJ2LkWIVt0bNuJF4a89Q6";
+        String aToken = "1325292306413576194-URa206WZicJkTcCN92DaB2LDx78Pjr";
+        String aTokenSecret = "1MLcfJUZxumquQtIDpbPsDWU8jdPr6OFbMurFcN9Mldzk";
+        Query query = new Query("#iPhone");
+        query.setCount(100);
+        Poligraph p = new Poligraph(cKey, cKeySecret, aToken, aTokenSecret);
+        ArrayList<Status> result = p.getUserTweetsInRange("elonmusk", "2020-11-10", "2020-11-12");
+        ArrayList<Result> sentiments = p.analyzeSentiment(result);
+        for (Result sentiment : sentiments)
+            System.out.println("Status@\t" + sentiment.getStatus().getUser().getScreenName() + "\t:\t" + sentiment.getStatus().getText() + "\t:\t" + sentiment.getSentimentString());
 
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey("your consumer key")
-                .setOAuthConsumerSecret("your consumer secret")
-                .setOAuthAccessToken("your access token")
-                .setOAuthAccessTokenSecret("your access token secret");
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        Twitter twitter = tf.getInstance();
-        Query query = new Query("#google");
-
-        QueryResult result = twitter.search(query);
-
-        for (Status status : result.getTweets())
-            System.out.println("Status@\t" + status.getUser().getScreenName() + "\t:\t" + status.getText());
-
+        //"Status@\t" + status.getUser().getScreenName() + "\t:\t" + status.getText() + "\t:\t"+ status.getCreatedAt()
     }
 }
