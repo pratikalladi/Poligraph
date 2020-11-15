@@ -1,4 +1,4 @@
-package org.pratik;
+package com.github.pratikalladi;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;

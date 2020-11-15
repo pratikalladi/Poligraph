@@ -1,4 +1,4 @@
-package org.pratik;
+package com.github.pratikalladi;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
