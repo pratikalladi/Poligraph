@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}&lt;</name>
     <description>
-        This is a simple library to analyze tweets using Twitter4j. Also uses CoreNLP for its sentiment analysis.
+        This is a simple library to analyze tweets using Twitter4j. Also uses CoreNLP for sentiment analysis.
     </description>
     <url>https://github.com/pratikalladi/Poligraph</url>
     <licenses>

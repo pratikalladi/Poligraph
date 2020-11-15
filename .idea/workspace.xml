@@ -23,14 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09f916cf-04ab-4e45-91ae-d184b8d36ca3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Poligraph.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Poligraph.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pratik/Poligraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/pratikalladi/Poligraph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pratik/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/pratikalladi/Result.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pratik/TwitterSentimentAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/pratikalladi/TwitterSentimentAnalysis.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
