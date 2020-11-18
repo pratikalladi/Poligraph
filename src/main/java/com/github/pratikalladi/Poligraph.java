@@ -108,20 +108,4 @@ public class Poligraph {
         return results;
     }
 
-    public static void main(String[] args) throws TwitterException, ParseException {
-
-        String cKey = "FZR30B3lQbMVoNEZBspeoJKPH";
-        String cKeySecret = "So12YRUjpr9qM9wfR921toN1yAmdvlJ2LkWIVt0bNuJF4a89Q6";
-        String aToken = "1325292306413576194-URa206WZicJkTcCN92DaB2LDx78Pjr";
-        String aTokenSecret = "1MLcfJUZxumquQtIDpbPsDWU8jdPr6OFbMurFcN9Mldzk";
-        Query query = new Query("#iPhone");
-        query.setCount(100);
-        Poligraph p = new Poligraph(cKey, cKeySecret, aToken, aTokenSecret);
-        ArrayList<Status> result = p.getUserTweetsInRange("elonmusk", "2020-11-10", "2020-11-12");
-        ArrayList<Result> sentiments = p.analyzeSentiment(result);
-        for (Result sentiment : sentiments)
-            System.out.println("Status@\t" + sentiment.getStatus().getUser().getScreenName() + "\t:\t" + sentiment.getStatus().getText() + "\t:\t" + sentiment.getSentimentString());
-
-        //"Status@\t" + status.getUser().getScreenName() + "\t:\t" + status.getText() + "\t:\t"+ status.getCreatedAt()
-    }
 }
