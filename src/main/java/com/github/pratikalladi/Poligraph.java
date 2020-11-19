@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Poligraph {
-    Twitter twitter;
-    public Poligraph(String cKey, String cKeySecret, String aToken, String aTokenSecret)
-    {
+    private final Twitter twitter;
+
+    public Poligraph(String cKey, String cKeySecret, String aToken, String aTokenSecret) {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(cKey)
@@ -25,14 +25,26 @@ public class Poligraph {
                 .setOAuthAccessToken(aToken)
                 .setOAuthAccessTokenSecret(aTokenSecret);
         TwitterFactory tf = new TwitterFactory(cb.build());
-        twitter = tf.getInstance();
+        twitter = getTwitter(tf);
     }
 
+    public Poligraph() {
+        twitter = getTwitter();
+    }
+
+    public Twitter getTwitter(TwitterFactory twitterFactory) {
+        return twitterFactory.getInstance();
+    }
+
+    public Twitter getTwitter() {
+        return TwitterFactory.getSingleton();
+    }
 
     // searchWord can be user id, place etc
     // date should be in the format yyyy-MM-dd
     // returns all tweets within a certain date range which pertain to certain search words
-    public ArrayList<Status> getTweetsInRange(String startDate, String endDate, String searchWord, int count) throws TwitterException {
+    public ArrayList<Status> getTweetsInRange(
+            String startDate, String endDate, String searchWord, int count) throws TwitterException {
         Query query = new Query(searchWord);
         query.setCount(count);
         query.setSince(startDate);
@@ -54,9 +66,10 @@ public class Poligraph {
 
     // returns all user's tweets within a certain timeframe
     // startDate and endDate should be in the format "yyyy-MM-dd"
-    public ArrayList<Status> getUserTweetsInRange(String user, String startDate, String endDate) throws TwitterException, ParseException {
-        Date startDt =new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-        Date endDt =new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+    public ArrayList<Status> getUserTweetsInRange(String user, String startDate, String endDate)
+            throws TwitterException, ParseException {
+        Date startDt = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date endDt = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
 
         ArrayList<Status> statuses = new ArrayList<>();
         Date createdAt;
@@ -70,7 +83,8 @@ public class Poligraph {
     }
 
     // finds all a user's tweets containing a certaint term
-    public ArrayList<Status> getUserTweetsContainsWord(String user, String word) throws TwitterException {
+    public ArrayList<Status> getUserTweetsContainsWord(String user, String word)
+            throws TwitterException {
         ArrayList<Status> statuses = new ArrayList<>();
         for (Status status : getUserTweets(user)) {
             if (status.getText().contains(word)) {
@@ -81,9 +95,11 @@ public class Poligraph {
     }
 
     // returns all of a certain user's tweets within a certain timeframe which contain a certain term
-    public ArrayList<Status> getUserTweetsContainsStringInRange(String user, String word, String startDate, String endDate) throws TwitterException, ParseException {
+    public ArrayList<Status> getUserTweetsContainsStringInRange(
+            String user, String word, String startDate, String endDate)
+            throws TwitterException, ParseException {
         ArrayList<Status> statuses = new ArrayList<>();
-        for (Status status : getUserTweetsInRange(user,startDate,endDate)) {
+        for (Status status : getUserTweetsInRange(user, startDate, endDate)) {
             if (status.getText().contains(word)) {
                 statuses.add(status);
             }
@@ -93,19 +109,21 @@ public class Poligraph {
 
     // returns the "sentiment" of a tweet alongside the original tweet
     public Result analyzeSentiment(Status status) {
-        TwitterSentimentAnalysis sentimentAnalysis = new TwitterSentimentAnalysis();
+        TwitterSentimentAnalysis sentimentAnalysis = getTwitterSentimentAnalysis();
         int sentimentValue = sentimentAnalysis.analyzeTweet(status.getText());
         return new Result(status, sentimentValue);
     }
 
-    // returns the "sentiments" of several tweets 
+    public TwitterSentimentAnalysis getTwitterSentimentAnalysis() {
+        return new TwitterSentimentAnalysis();
+    }
+
+    // returns the "sentiments" of several tweets
     public ArrayList<Result> analyzeSentiment(ArrayList<Status> statuses) {
         ArrayList<Result> results = new ArrayList<>();
         for (Status status : statuses) {
             results.add(analyzeSentiment(status));
-
         }
         return results;
     }
-
 }
